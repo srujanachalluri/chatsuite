@@ -1,4 +1,4 @@
-# 💬 ChatifyPro
+# 💬 ChatSuite
 
 > A modern, real-time chat application with AI integration, group rooms, and direct messaging — built with React and Firebase.
 
@@ -34,7 +34,7 @@
 
 | Channels                      | email                     | Emoji                   |
 | ----------------------------- | ------------------------- | ----------------------- |
-| ![Login](images/channesl.png) | ![Chat](images/email.png) | ![AI](images/emoji.png) |
+| ![Login](images/channels.png) | ![Chat](images/email.png) | ![AI](images/emoji.png) |
 
 ---
 
@@ -63,8 +63,8 @@
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/chatify-pro.git
-cd chatify-pro
+git clone https://github.com/YOUR_USERNAME/chatsuit.git
+cd chatsuite
 ```
 
 ### 2. Install dependencies
@@ -130,7 +130,7 @@ The key is stored in the user's browser `localStorage` — never sent to any ser
 ## 📁 Project Structure
 
 ```
-chatify-pro/
+ChatSuit-pro/
 ├── src/
 │   ├── components/
 │   │   ├── Auth/

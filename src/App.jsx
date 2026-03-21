@@ -45,7 +45,7 @@ export default function App() {
         animation: 'spin 0.8s linear infinite',
       }} />
       <p style={{ color: '#334155', fontSize: '14px', fontWeight: '600', fontFamily: 'Inter, sans-serif' }}>
-        Loading ChatifyPro...
+        Loading ChatSuite...
       </p>
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
@@ -80,7 +80,7 @@ export default function App() {
 
             <div style={{ fontSize: '64px', marginBottom: '4px' }}>💬</div>
             <h2 style={{ fontSize: '26px', color: '#e2e8f0', fontWeight: '800', letterSpacing: '-0.6px', textAlign: 'center' }}>
-              Welcome to ChatifyPro
+              Welcome to ChatSuite
             </h2>
             <p style={{ fontSize: '15px', color: '#475569', textAlign: 'center', maxWidth: '340px', lineHeight: 1.6 }}>
               Pick a channel, send a direct message, or chat with AI

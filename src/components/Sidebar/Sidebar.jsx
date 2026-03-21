@@ -201,7 +201,7 @@ export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId
                 onMouseOut={e => e.currentTarget.style.background = 'none'}
               >
                 <span style={{ fontSize: '18px' }}>🚪</span>
-                Sign out of ChatifyPro
+                Sign out of ChatSuite
               </button>
             </div>
           </>
