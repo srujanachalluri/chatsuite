@@ -26,9 +26,15 @@
 
 > _(Add your screenshots here after deployment)_
 
-| Login                           | Chat Room                     | AI Assistant              |
-| ------------------------------- | ----------------------------- | ------------------------- |
-| ![Login](screenshots/login.png) | ![Chat](screenshots/chat.png) | ![AI](screenshots/ai.png) |
+| Login                      | Chat Room              | AI Assistant         |
+| -------------------------- | ---------------------- | -------------------- |
+| ![Login](images/login.png) | ![Chat](images/DM.png) | ![AI](images/ai.png) |
+
+---
+
+| Channels                      | email                     | Emoji                   |
+| ----------------------------- | ------------------------- | ----------------------- |
+| ![Login](images/channesl.png) | ![Chat](images/email.png) | ![AI](images/emoji.png) |
 
 ---
 
