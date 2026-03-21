@@ -9,6 +9,17 @@
 
 ---
 
+<div align="center">
+
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Support%20Me-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/srujanachalluri)
+&nbsp;&nbsp;
+
+[![GitHub stars](https://img.shields.io/github/stars/srujanachalluri/ChatSuite?style=for-the-badge&logo=github&color=yellow)](https://github.com/srujanachalluri/ChatSuite/stargazers)
+&nbsp;&nbsp;
+[![GitHub forks](https://img.shields.io/github/forks/srujanachalluri/ChatSuite?style=for-the-badge&logo=github&color=blue)](https://github.com/srujanachalluri/ChatSuite/network)
+
+</div>
+
 ## ✨ Features
 
 - 🔐 **Google Authentication** — One-click sign in, no passwords
@@ -213,6 +224,20 @@ Add your Vercel URL to:
 MIT License — feel free to use this project for learning or as a portfolio piece.
 
 ---
+
+<div align="center">
+  <h3>☕ Support This Project</h3>
+  <p>If you found ChatSuite useful, consider buying me a coffee!</p>
+
+[![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/srujanachalluri)
+
+  <br/>
+
+  <p>⭐ Don't forget to star this repo if you liked it!</p>
+
+[![GitHub stars](https://img.shields.io/github/stars/srujanachalluri/ChatSuite?style=social)](https://github.com/srujanachalluri/ChatSuite/stargazers)
+
+</div>
 
 <div align="center">
   <p>Built with ❤️ using React + Firebase</p>
