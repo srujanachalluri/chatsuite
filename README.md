@@ -28,7 +28,7 @@
 
 | Login                      | Chat Room              | AI Assistant         |
 | -------------------------- | ---------------------- | -------------------- |
-| ![Login](images/login.png) | ![Chat](images/DM.png) | ![AI](images/ai.png) |
+| ![Login](images/Login.png) | ![Chat](images/DM.png) | ![AI](images/ai.png) |
 
 ---
 
