@@ -67,7 +67,7 @@ export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId
             fontSize: '20px', boxShadow: '0 4px 16px rgba(99,102,241,0.4)',
           }}>💬</div>
           <div>
-            <h2 style={{ color: '#f1f5f9', margin: 0, fontSize: '17px', fontWeight: '800', letterSpacing: '-0.4px' }}>ChatifyPro</h2>
+            <h2 style={{ color: '#f1f5f9', margin: 0, fontSize: '17px', fontWeight: '800', letterSpacing: '-0.4px' }}>ChatSuite</h2>
             <p style={{ color: '#334155', margin: 0, fontSize: '11px', fontWeight: '500' }}>Real-time · AI · Rooms</p>
           </div>
         </div>

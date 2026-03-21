@@ -37,7 +37,7 @@ export default function Login() {
           background: 'linear-gradient(135deg, #ffffff 0%, #c7d2fe 60%, #a5b4fc 100%)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
           letterSpacing: '-0.8px', lineHeight: 1.1,
-        }}>ChatifyPro</h1>
+        }}>ChatifySuite</h1>
 
         <p style={{ color: '#94a3b8', marginBottom: '8px', fontSize: '16px', fontWeight: '500', lineHeight: 1.5 }}>
           Chat with friends · Create rooms · Talk to AI
