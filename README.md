@@ -26,9 +26,9 @@
 
 > _(Add your screenshots here after deployment)_
 
-| Login                      | Chat Room              | AI Assistant         |
-| -------------------------- | ---------------------- | -------------------- |
-| ![Login](images/Login.png) | ![Chat](images/DM.png) | ![AI](images/ai.png) |
+| Login                          | Chat Room              | AI Assistant         |
+| ------------------------------ | ---------------------- | -------------------- |
+| ![Login](images/chatsuite.png) | ![Chat](images/DM.png) | ![AI](images/ai.png) |
 
 ---
 
