@@ -116,7 +116,8 @@ Open [http://localhost:5173](http://localhost:5173)
 
 **Srujana Challuri** — Software Engineer
 
-[![GitHub](https://img.shields.io/badge/GitHub-srujanachalluri-181717?style=flat&logo=github)](https://github.com/srujanachalluri)(https://github.com/sareenachalluri)
+[![GitHub](https://img.shields.io/badge/GitHub-srujanachalluri-181717?style=flat&logo=github)](https://github.com/srujanachalluri)
+[![GitHub](https://img.shields.io/badge/GitHub-srujanachalluri-181717?style=flat&logo=github)](https://github.com/sareenachalluri)
 [![Portfolio](https://img.shields.io/badge/Portfolio-Visit-6366f1?style=flat)](https://your-portfolio-url.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat&logo=linkedin)](https://linkedin.com/in/your-profile)
 
