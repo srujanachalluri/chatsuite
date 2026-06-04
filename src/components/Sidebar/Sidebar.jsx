@@ -5,6 +5,8 @@ import { signOut } from 'firebase/auth';
 import toast from 'react-hot-toast';
 import { useLang } from '../../i18n/LanguageContext';
 import LanguageToggle from '../LanguageToggle';
+import InviteShare from '../Share/InviteShare';
+import HelpCenter from '../Help/HelpCenter';
 
 export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId, isMobile }) {
   const { t } = useLang();
@@ -14,6 +16,8 @@ export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId
   const [showRoomInput, setShowRoomInput] = useState(false);
   const [tab, setTab] = useState('rooms');
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showInvite, setShowInvite] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   useEffect(() => {
     return onSnapshot(collection(db, 'rooms'), snap => {
@@ -101,6 +105,26 @@ export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId
           <span>{t('sidebar.aiAssistant')}</span>
           <span style={{ marginLeft: 'auto', fontSize: '9px', fontWeight: '800', background: 'rgba(99,102,241,0.3)', padding: '3px 8px', borderRadius: '20px', color: '#818cf8', letterSpacing: '0.8px' }}>GEMINI</span>
         </button>
+
+        <div style={{ display: 'flex', gap: '8px', marginTop: '8px' }}>
+          {[
+            { label: t('invite.button'), icon: '🎉', onClick: () => setShowInvite(true) },
+            { label: t('help.button'), icon: '❓', onClick: () => setShowHelp(true) },
+          ].map(b => (
+            <button key={b.label} onClick={b.onClick} style={{
+              flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '7px',
+              padding: '9px 8px', fontSize: '12px', fontWeight: '700', cursor: 'pointer',
+              background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)',
+              borderRadius: '11px', color: '#94a3b8', transition: 'all 0.2s',
+            }}
+              onMouseOver={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = '#e2e8f0'; }}
+              onMouseOut={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = '#94a3b8'; }}
+            >
+              <span style={{ fontSize: '14px' }}>{b.icon}</span>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{b.label}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Tabs */}
@@ -241,6 +265,9 @@ export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId
           <span style={{ color: '#475569', fontSize: '16px', flexShrink: 0, letterSpacing: '2px' }}>···</span>
         </button>
       </div>
+
+      {showInvite && <InviteShare onClose={() => setShowInvite(false)} />}
+      {showHelp && <HelpCenter onClose={() => setShowHelp(false)} />}
 
       <style>{`
         @keyframes slideUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }

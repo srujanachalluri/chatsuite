@@ -8,7 +8,29 @@ export const translations = {
     'login.feature.ai': '🤖 AI Chat',
     'login.feature.reactions': '😊 Reactions',
     'login.continueGoogle': 'Continue with Google',
+    'login.continueFacebook': 'Continue with Facebook',
     'login.secure': 'Secure sign-in · No password needed',
+    'login.signInFailed': 'Sign-in failed. Please try again.',
+    'login.accountExists': 'You already signed up with a different method. Use that to sign in.',
+
+    // Invite / share
+    'invite.button': 'Invite friends',
+    'invite.title': 'Invite friends to ChatSuite',
+    'invite.subtitle': 'Share your link — the more friends, the better the chat!',
+    'invite.yourLink': 'Your invite link',
+    'invite.copy': 'Copy link',
+    'invite.copied': 'Link copied!',
+    'invite.shareVia': 'Share via',
+    'invite.nativeShare': 'Share…',
+    'invite.message': 'Join me on ChatSuite — free real-time chat with AI! 💬',
+    'invite.instaHint': 'For Instagram: copy the link and paste it in your Story or bio.',
+
+    // Help center
+    'help.button': 'Help & Guides',
+    'help.title': 'Help & Guides',
+    'help.subtitle': 'Learn ChatSuite, Instagram & Facebook — step by step',
+    'help.back': 'All guides',
+    'help.steps': 'Steps',
 
     // Sidebar
     'sidebar.subtitle': 'Real-time · AI · Rooms',
@@ -99,7 +121,29 @@ export const translations = {
     'login.feature.ai': '🤖 AI చాట్',
     'login.feature.reactions': '😊 రియాక్షన్‌లు',
     'login.continueGoogle': 'Googleతో కొనసాగించండి',
+    'login.continueFacebook': 'Facebookతో కొనసాగించండి',
     'login.secure': 'సురక్షిత సైన్-ఇన్ · పాస్‌వర్డ్ అవసరం లేదు',
+    'login.signInFailed': 'సైన్-ఇన్ విఫలమైంది. దయచేసి మళ్లీ ప్రయత్నించండి.',
+    'login.accountExists': 'మీరు ఇప్పటికే వేరే పద్ధతిలో సైన్ అప్ అయ్యారు. దానితో సైన్ ఇన్ చేయండి.',
+
+    // Invite / share
+    'invite.button': 'స్నేహితులను ఆహ్వానించండి',
+    'invite.title': 'ChatSuiteకి స్నేహితులను ఆహ్వానించండి',
+    'invite.subtitle': 'మీ లింక్‌ను షేర్ చేయండి — ఎక్కువ స్నేహితులు, మరింత మంచి చాట్!',
+    'invite.yourLink': 'మీ ఆహ్వాన లింక్',
+    'invite.copy': 'లింక్ కాపీ చేయండి',
+    'invite.copied': 'లింక్ కాపీ అయింది!',
+    'invite.shareVia': 'దీని ద్వారా షేర్ చేయండి',
+    'invite.nativeShare': 'షేర్…',
+    'invite.message': 'ChatSuiteలో నాతో చేరండి — AIతో ఉచిత నిజ-సమయ చాట్! 💬',
+    'invite.instaHint': 'Instagram కోసం: లింక్‌ను కాపీ చేసి మీ స్టోరీ లేదా బయోలో పేస్ట్ చేయండి.',
+
+    // Help center
+    'help.button': 'సహాయం & గైడ్‌లు',
+    'help.title': 'సహాయం & గైడ్‌లు',
+    'help.subtitle': 'ChatSuite, Instagram & Facebook నేర్చుకోండి — దశలవారీగా',
+    'help.back': 'అన్ని గైడ్‌లు',
+    'help.steps': 'దశలు',
 
     // Sidebar
     'sidebar.subtitle': 'నిజ-సమయం · AI · రూమ్‌లు',
