@@ -2,11 +2,20 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Toaster } from 'react-hot-toast';
 import App from './App';
+import { LanguageProvider } from './i18n/LanguageContext';
 import './index.css';
+
+// Register the service worker for PWA install + offline shell.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <LanguageProvider>
+      <App />
     <Toaster
       position="top-center"
       toastOptions={{
@@ -24,5 +33,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         error: { iconTheme: { primary: '#f87171', secondary: '#fff' } },
       }}
     />
+    </LanguageProvider>
   </React.StrictMode>
 );

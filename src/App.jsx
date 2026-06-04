@@ -3,6 +3,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { doc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from './firebase';
 import useIsMobile from './hooks/useIsMobile';
+import { useLang } from './i18n/LanguageContext';
 import Login from './components/Auth/Login';
 import Sidebar from './components/Sidebar/Sidebar';
 import ChatRoom from './components/Chat/ChatRoom';
@@ -17,6 +18,7 @@ export default function App() {
   const [showAI, setShowAI] = useState(false);
   const [mobileChatOpen, setMobileChatOpen] = useState(false);
   const isMobile = useIsMobile();
+  const { t } = useLang();
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (u) => {
@@ -61,7 +63,7 @@ export default function App() {
         animation: 'spin 0.8s linear infinite',
       }} />
       <p style={{ color: '#334155', fontSize: '14px', fontWeight: '600', fontFamily: 'Inter, sans-serif' }}>
-        Loading ChatSuite...
+        {t('app.loading')}
       </p>
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
@@ -107,17 +109,17 @@ export default function App() {
 
             <div style={{ fontSize: '64px', marginBottom: '4px' }}>💬</div>
             <h2 style={{ fontSize: '26px', color: '#e2e8f0', fontWeight: '800', letterSpacing: '-0.6px', textAlign: 'center' }}>
-              Welcome to ChatSuite
+              {t('welcome.title')}
             </h2>
             <p style={{ fontSize: '15px', color: '#475569', textAlign: 'center', maxWidth: '340px', lineHeight: 1.6 }}>
-              Pick a channel, send a direct message, or chat with AI
+              {t('welcome.subtitle')}
             </p>
 
             <div style={{ display: 'flex', gap: '12px', marginTop: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
               {[
-                { icon: '🏠', title: 'Channels', desc: 'Group conversations' },
-                { icon: '✉️', title: 'Direct Messages', desc: 'Private chats' },
-                { icon: '🤖', title: 'AI Chat', desc: 'Powered by Gemini' },
+                { icon: '🏠', title: t('welcome.channels'), desc: t('welcome.channelsDesc') },
+                { icon: '✉️', title: t('welcome.dms'), desc: t('welcome.dmsDesc') },
+                { icon: '🤖', title: t('welcome.ai'), desc: t('welcome.aiDesc') },
               ].map(f => (
                 <div key={f.title} style={{
                   background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)',

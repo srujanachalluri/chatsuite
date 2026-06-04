@@ -1,4 +1,5 @@
 import { createPortal } from 'react-dom';
+import { useLang } from '../../i18n/LanguageContext';
 
 const EMOJIS = ['❤️', '😂', '😮', '😢', '👍', '🔥'];
 
@@ -40,11 +41,12 @@ function EmojiRow({ myReactions, onReact, big }) {
 }
 
 export default function MessageMenu({ isOwn, isMobile, myReactions, onReact, onCopy, onEdit, onDelete, onClose }) {
+  const { t } = useLang();
   const actions = (
     <>
-      <ActionRow icon="📋" label="Copy" onClick={onCopy} />
-      {isOwn && <ActionRow icon="✏️" label="Edit" onClick={onEdit} />}
-      {isOwn && <ActionRow icon="🗑️" label="Delete" danger onClick={onDelete} />}
+      <ActionRow icon="📋" label={t('menu.copy')} onClick={onCopy} />
+      {isOwn && <ActionRow icon="✏️" label={t('menu.edit')} onClick={onEdit} />}
+      {isOwn && <ActionRow icon="🗑️" label={t('menu.delete')} danger onClick={onDelete} />}
     </>
   );
 

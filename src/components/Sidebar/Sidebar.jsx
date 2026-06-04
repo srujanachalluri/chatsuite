@@ -3,8 +3,11 @@ import { collection, addDoc, onSnapshot, serverTimestamp } from 'firebase/firest
 import { db, auth } from '../../firebase';
 import { signOut } from 'firebase/auth';
 import toast from 'react-hot-toast';
+import { useLang } from '../../i18n/LanguageContext';
+import LanguageToggle from '../LanguageToggle';
 
 export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId, isMobile }) {
+  const { t } = useLang();
   const [rooms, setRooms] = useState([]);
   const [users, setUsers] = useState([]);
   const [newRoom, setNewRoom] = useState('');
@@ -30,11 +33,11 @@ export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId
     if (!name) return;
     try {
       await addDoc(collection(db, 'rooms'), { name, createdBy: auth.currentUser.uid, createdAt: serverTimestamp() });
-      toast.success(`#${name} created`);
+      toast.success(t('toast.channelCreated', { name }));
       setNewRoom('');
       setShowRoomInput(false);
     } catch (err) {
-      toast.error('Could not create channel');
+      toast.error(t('toast.channelFailed'));
     }
   };
 
@@ -72,10 +75,11 @@ export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '20px', boxShadow: '0 4px 16px rgba(99,102,241,0.4)',
           }}>💬</div>
-          <div>
+          <div style={{ flex: 1, minWidth: 0 }}>
             <h2 style={{ color: '#f1f5f9', margin: 0, fontSize: '17px', fontWeight: '800', letterSpacing: '-0.4px' }}>ChatSuite</h2>
-            <p style={{ color: '#334155', margin: 0, fontSize: '11px', fontWeight: '500' }}>Real-time · AI · Rooms</p>
+            <p style={{ color: '#334155', margin: 0, fontSize: '11px', fontWeight: '500' }}>{t('sidebar.subtitle')}</p>
           </div>
+          <LanguageToggle size="sm" />
         </div>
       </div>
 
@@ -94,19 +98,19 @@ export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId
           onMouseOut={e => { if (activeId !== 'ai') { e.currentTarget.style.background = 'rgba(99,102,241,0.08)'; } }}
         >
           <span style={{ fontSize: '18px' }}>🤖</span>
-          <span>AI Assistant</span>
+          <span>{t('sidebar.aiAssistant')}</span>
           <span style={{ marginLeft: 'auto', fontSize: '9px', fontWeight: '800', background: 'rgba(99,102,241,0.3)', padding: '3px 8px', borderRadius: '20px', color: '#818cf8', letterSpacing: '0.8px' }}>GEMINI</span>
         </button>
       </div>
 
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '6px', padding: '0 14px 14px' }}>
-        {[['rooms', '# Channels'], ['dms', '✉ Direct']].map(([t, label]) => (
-          <button key={t} onClick={() => setTab(t)} style={{
+        {[['rooms', `# ${t('sidebar.channels')}`], ['dms', `✉ ${t('sidebar.direct')}`]].map(([tabKey, label]) => (
+          <button key={tabKey} onClick={() => setTab(tabKey)} style={{
             flex: 1, padding: '8px', fontSize: '12px', fontWeight: '700',
-            background: tab === t ? 'rgba(255,255,255,0.08)' : 'none',
-            color: tab === t ? '#e2e8f0' : '#475569',
-            border: `1px solid ${tab === t ? 'rgba(255,255,255,0.12)' : 'transparent'}`,
+            background: tab === tabKey ? 'rgba(255,255,255,0.08)' : 'none',
+            color: tab === tabKey ? '#e2e8f0' : '#475569',
+            border: `1px solid ${tab === tabKey ? 'rgba(255,255,255,0.12)' : 'transparent'}`,
             borderRadius: '10px', cursor: 'pointer', transition: 'all 0.2s',
           }}>{label}</button>
         ))}
@@ -117,7 +121,7 @@ export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId
         {tab === 'rooms' && (
           <>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '2px 8px 8px' }}>
-              <span style={{ color: '#334155', fontSize: '10px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Channels</span>
+              <span style={{ color: '#334155', fontSize: '10px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.12em' }}>{t('sidebar.channelsHeading')}</span>
               <button onClick={() => setShowRoomInput(!showRoomInput)} style={{
                 background: showRoomInput ? 'rgba(99,102,241,0.2)' : 'none', border: 'none',
                 color: '#6366f1', cursor: 'pointer', fontSize: '20px',
@@ -130,14 +134,14 @@ export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId
               <div style={{ padding: '0 2px 10px', display: 'flex', gap: '6px' }}>
                 <input value={newRoom} onChange={e => setNewRoom(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && createRoom()}
-                  placeholder="channel-name" autoFocus
+                  placeholder={t('sidebar.channelPlaceholder')} autoFocus
                   style={{ flex: 1, background: '#13132a', color: '#e2e8f0', border: '1px solid #6366f1', borderRadius: '10px', padding: '9px 12px', fontSize: '13px', outline: 'none', fontWeight: '500' }} />
                 <button onClick={createRoom} style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', border: 'none', borderRadius: '10px', color: 'white', cursor: 'pointer', padding: '0 14px', fontWeight: '700', fontSize: '15px' }}>✓</button>
               </div>
             )}
 
             {rooms.length === 0 && !showRoomInput && (
-              <p style={{ color: '#1e293b', fontSize: '13px', textAlign: 'center', marginTop: '20px', fontWeight: '500' }}>No channels yet — create one!</p>
+              <p style={{ color: '#1e293b', fontSize: '13px', textAlign: 'center', marginTop: '20px', fontWeight: '500' }}>{t('sidebar.noChannels')}</p>
             )}
 
             {rooms.map(room => (
@@ -152,9 +156,9 @@ export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId
         {tab === 'dms' && (
           <>
             <div style={{ padding: '2px 8px 8px' }}>
-              <span style={{ color: '#334155', fontSize: '10px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Direct Messages</span>
+              <span style={{ color: '#334155', fontSize: '10px', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.12em' }}>{t('sidebar.dmHeading')}</span>
             </div>
-            {users.length === 0 && <p style={{ color: '#1e293b', fontSize: '13px', textAlign: 'center', marginTop: '20px', fontWeight: '500' }}>No other users yet</p>}
+            {users.length === 0 && <p style={{ color: '#1e293b', fontSize: '13px', textAlign: 'center', marginTop: '20px', fontWeight: '500' }}>{t('sidebar.noUsers')}</p>}
             {users.map(user => (
               <button key={user.uid} onClick={() => onSelectDM(user)} style={{
                 width: '100%', textAlign: 'left', padding: '9px 14px',
@@ -198,7 +202,7 @@ export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId
                   <p style={{ color: '#475569', margin: '2px 0 0', fontSize: '11px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{auth.currentUser?.email}</p>
                 </div>
               </div>
-              <button onClick={() => { signOut(auth); toast.success('Signed out'); }} style={{
+              <button onClick={() => { signOut(auth); toast.success(t('toast.signedOut')); }} style={{
                 width: '100%', padding: '14px 18px', background: 'none', border: 'none',
                 color: '#f87171', cursor: 'pointer', fontSize: '14px', fontWeight: '700',
                 textAlign: 'left', display: 'flex', alignItems: 'center', gap: '12px', transition: 'background 0.2s',
@@ -207,7 +211,7 @@ export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId
                 onMouseOut={e => e.currentTarget.style.background = 'none'}
               >
                 <span style={{ fontSize: '18px' }}>🚪</span>
-                Sign out of ChatSuite
+                {t('sidebar.signOut')}
               </button>
             </div>
           </>
@@ -232,7 +236,7 @@ export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId
             <p style={{ color: '#e2e8f0', margin: 0, fontSize: '14px', fontWeight: '700', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.2px' }}>
               {auth.currentUser?.displayName}
             </p>
-            <p style={{ color: '#4ade80', margin: 0, fontSize: '11px', fontWeight: '600' }}>● Online</p>
+            <p style={{ color: '#4ade80', margin: 0, fontSize: '11px', fontWeight: '600' }}>{t('sidebar.online')}</p>
           </div>
           <span style={{ color: '#475569', fontSize: '16px', flexShrink: 0, letterSpacing: '2px' }}>···</span>
         </button>

@@ -4,10 +4,12 @@ import { db, auth } from '../../firebase';
 import MessageList from '../Chat/MessageList';
 import MessageInput from '../Chat/MessageInput';
 import BackButton from '../Chat/BackButton';
+import { useLang } from '../../i18n/LanguageContext';
 
 export default function DMChat({ otherUser, onBack }) {
   const [messages, setMessages] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const { t } = useLang();
   const dmId = [auth.currentUser.uid, otherUser.uid].sort().join('_');
 
   useEffect(() => {
@@ -21,7 +23,7 @@ export default function DMChat({ otherUser, onBack }) {
     <div style={{ textAlign: 'center', marginTop: '100px' }}>
       <img src={otherUser.photoURL} style={{ width: '72px', height: '72px', borderRadius: '50%', border: '3px solid rgba(99,102,241,0.5)', margin: '0 auto 16px', display: 'block', boxShadow: '0 8px 32px rgba(99,102,241,0.3)' }} alt="" />
       <p style={{ color: '#94a3b8', fontWeight: '700', fontSize: '17px', marginBottom: '6px' }}>{otherUser.displayName}</p>
-      <p style={{ color: '#334155', fontSize: '14px' }}>Start your private conversation</p>
+      <p style={{ color: '#334155', fontSize: '14px' }}>{t('chat.startPrivate')}</p>
     </div>
   );
 
@@ -36,13 +38,13 @@ export default function DMChat({ otherUser, onBack }) {
         </div>
         <div>
           <h2 style={{ color: '#f1f5f9', margin: 0, fontSize: '17px', fontWeight: '700', letterSpacing: '-0.4px' }}>{otherUser.displayName}</h2>
-          <p style={{ color: '#4ade80', margin: 0, fontSize: '12px', fontWeight: '600', marginTop: '1px' }}>● Active now</p>
+          <p style={{ color: '#4ade80', margin: 0, fontSize: '12px', fontWeight: '600', marginTop: '1px' }}>{t('chat.activeNow')}</p>
         </div>
       </div>
 
       <MessageList messages={messages} loaded={loaded} emptyState={emptyState} collectionPath={`dms/${dmId}/messages`} />
 
-      <MessageInput collectionPath={`dms/${dmId}/messages`} placeholder={`Message ${otherUser.displayName}...`} />
+      <MessageInput collectionPath={`dms/${dmId}/messages`} placeholder={`${t('input.messagePrefix')} ${otherUser.displayName}...`} />
       <style>{`@keyframes livePulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }`}</style>
     </div>
   );
