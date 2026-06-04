@@ -5,6 +5,8 @@ import EmojiPicker from 'emoji-picker-react';
 import toast from 'react-hot-toast';
 import useIsMobile from '../../hooks/useIsMobile';
 
+const MAX_LEN = 4000;
+
 export default function MessageInput({ collectionPath, placeholder = 'Write a message...' }) {
   const [text, setText] = useState('');
   const [showEmoji, setShowEmoji] = useState(false);
@@ -16,6 +18,7 @@ export default function MessageInput({ collectionPath, placeholder = 'Write a me
 
   const send = async () => {
     if (!text.trim()) return;
+    if (text.length > MAX_LEN) { toast.error(`Message too long (max ${MAX_LEN} characters)`); return; }
     const msg = text.trim();
     setText('');
     try {
@@ -61,11 +64,12 @@ export default function MessageInput({ collectionPath, placeholder = 'Write a me
           onMouseOut={e => { e.currentTarget.style.opacity = showEmoji ? '1' : '0.55'; e.currentTarget.style.transform = 'none'; }}
         >😊</button>
 
-        <input ref={inputRef} value={text} onChange={e => setText(e.target.value)}
+        <input ref={inputRef} value={text} onChange={e => setText(e.target.value.slice(0, MAX_LEN))}
+          maxLength={MAX_LEN}
           onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
           onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
           placeholder={placeholder}
-          style={{ flex: 1, background: 'none', color: '#f1f5f9', border: 'none', fontSize: '15px', fontWeight: '450', outline: 'none', letterSpacing: '0.1px' }}
+          style={{ flex: 1, background: 'none', color: '#f1f5f9', border: 'none', fontSize: '15px', fontWeight: '450', outline: 'none', letterSpacing: '0.1px', minWidth: 0 }}
         />
 
         <button onClick={send} disabled={!canSend} style={{
@@ -82,9 +86,16 @@ export default function MessageInput({ collectionPath, placeholder = 'Write a me
         >➤</button>
       </div>
 
-      <p style={{ textAlign: 'center', fontSize: '11px', color: '#1e293b', marginTop: '6px', fontWeight: '500' }}>
-        Press Enter to send · Shift+Enter for new line
-      </p>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '6px' }}>
+        <p style={{ textAlign: 'center', fontSize: '11px', color: '#1e293b', fontWeight: '500', margin: 0 }}>
+          Enter to send · Shift+Enter newline · **bold** *italic* ~~strike~~ `code`
+        </p>
+        {text.length > MAX_LEN * 0.85 && (
+          <span style={{ fontSize: '11px', fontWeight: '700', color: text.length >= MAX_LEN ? '#f87171' : '#64748b' }}>
+            {text.length}/{MAX_LEN}
+          </span>
+        )}
+      </div>
     </div>
   );
 }

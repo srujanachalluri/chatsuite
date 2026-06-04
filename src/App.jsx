@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from './firebase';
 import useIsMobile from './hooks/useIsMobile';
 import Login from './components/Auth/Login';
@@ -34,6 +34,19 @@ export default function App() {
     });
     return unsub;
   }, []);
+
+  // Presence heartbeat: keep lastSeen fresh so the member list shows real online status.
+  useEffect(() => {
+    if (!user) return;
+    const beat = () => {
+      updateDoc(doc(db, 'users', user.uid), { lastSeen: serverTimestamp() }).catch(() => {});
+    };
+    beat();
+    const id = setInterval(beat, 60000);
+    const onVisible = () => { if (!document.hidden) beat(); };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => { clearInterval(id); document.removeEventListener('visibilitychange', onVisible); };
+  }, [user]);
 
   if (loading) return (
     <div style={{
