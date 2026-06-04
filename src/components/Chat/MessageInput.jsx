@@ -2,12 +2,15 @@ import { useState, useRef } from 'react';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db, auth } from '../../firebase';
 import EmojiPicker from 'emoji-picker-react';
+import toast from 'react-hot-toast';
+import useIsMobile from '../../hooks/useIsMobile';
 
 export default function MessageInput({ collectionPath, placeholder = 'Write a message...' }) {
   const [text, setText] = useState('');
   const [showEmoji, setShowEmoji] = useState(false);
   const [focused, setFocused] = useState(false);
   const inputRef = useRef();
+  const isMobile = useIsMobile();
 
   const getCol = () => collection(db, ...collectionPath.split('/'));
 
@@ -15,23 +18,28 @@ export default function MessageInput({ collectionPath, placeholder = 'Write a me
     if (!text.trim()) return;
     const msg = text.trim();
     setText('');
-    await addDoc(getCol(), {
-      text: msg, uid: auth.currentUser.uid,
-      displayName: auth.currentUser.displayName,
-      photoURL: auth.currentUser.photoURL,
-      createdAt: serverTimestamp(), reactions: {},
-    });
+    try {
+      await addDoc(getCol(), {
+        text: msg, uid: auth.currentUser.uid,
+        displayName: auth.currentUser.displayName,
+        photoURL: auth.currentUser.photoURL,
+        createdAt: serverTimestamp(), reactions: {},
+      });
+    } catch {
+      setText(msg);
+      toast.error('Message failed to send');
+    }
   };
 
   const canSend = text.trim().length > 0;
 
   return (
-    <div style={{ padding: '14px 18px', borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(11,11,20,0.95)', backdropFilter: 'blur(20px)', position: 'relative' }}>
+    <div className="msg-input-bar" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', background: 'rgba(11,11,20,0.95)', backdropFilter: 'blur(20px)', position: 'relative' }}>
       {showEmoji && (
         <>
           <div style={{ position: 'fixed', inset: 0, zIndex: 99 }} onClick={() => setShowEmoji(false)} />
-          <div style={{ position: 'absolute', bottom: '76px', left: '18px', zIndex: 100 }}>
-            <EmojiPicker theme="dark" height={380} width={340}
+          <div style={{ position: 'absolute', bottom: '76px', left: '12px', right: isMobile ? '12px' : 'auto', zIndex: 100 }}>
+            <EmojiPicker theme="dark" height={360} width={isMobile ? '100%' : 340}
               onEmojiClick={(e) => { setText(t => t + e.emoji); setShowEmoji(false); inputRef.current?.focus(); }} />
           </div>
         </>

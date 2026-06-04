@@ -1,8 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import BackButton from '../Chat/BackButton';
 
-export default function AIChat() {
-  const [messages, setMessages] = useState([]);
+export default function AIChat({ onBack }) {
+  const [messages, setMessages] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('ai_chat')) || []; } catch { return []; }
+  });
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [apiKey, setApiKey] = useState(() => localStorage.getItem('gemini_key') || '');
@@ -12,6 +15,11 @@ export default function AIChat() {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  // Persist the conversation so it survives panel switches and refreshes.
+  useEffect(() => {
+    localStorage.setItem('ai_chat', JSON.stringify(messages));
   }, [messages]);
 
   const saveKey = async () => {
@@ -88,7 +96,7 @@ export default function AIChat() {
             href="https://aistudio.google.com/app/apikey"
             target="_blank"
             rel="noreferrer"
-            style={{ color: '#667eea', textDecoration: 'none' }}
+            style={{ color: '#6366f1', textDecoration: 'none' }}
           >
             Get one free here →
           </a>
@@ -105,7 +113,7 @@ export default function AIChat() {
             borderRadius: '12px', padding: '12px 16px', width: '320px',
             fontSize: '14px', outline: 'none',
           }}
-          onFocus={e => e.target.style.borderColor = '#667eea'}
+          onFocus={e => e.target.style.borderColor = '#6366f1'}
           onBlur={e => e.target.style.borderColor = '#2a2a3e'}
         />
 
@@ -119,7 +127,7 @@ export default function AIChat() {
           onClick={saveKey}
           disabled={!apiKey.trim()}
           style={{
-            background: apiKey.trim() ? 'linear-gradient(135deg, #667eea, #764ba2)' : '#1e1e32',
+            background: apiKey.trim() ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : '#1e1e32',
             border: 'none', borderRadius: '12px', padding: '13px 28px',
             color: 'white', cursor: apiKey.trim() ? 'pointer' : 'default',
             fontWeight: '600', fontSize: '15px', transition: 'all 0.2s',
@@ -134,15 +142,16 @@ export default function AIChat() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {/* Header */}
-      <div style={{
-        padding: '14px 20px', borderBottom: '1px solid #1e1e32',
+      <div className="chat-header" style={{
+        borderBottom: '1px solid #1e1e32',
         background: '#0d0d1a', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {onBack && <BackButton onClick={onBack} />}
           <span style={{ fontSize: '28px' }}>🤖</span>
           <div>
             <h2 style={{ color: 'white', margin: 0, fontSize: '16px', fontWeight: '700' }}>AI Assistant</h2>
-            <p style={{ color: '#4CAF50', margin: 0, fontSize: '11px' }}>● Powered by Gemini</p>
+            <p style={{ color: '#4ade80', margin: 0, fontSize: '11px' }}>● Powered by Gemini</p>
           </div>
         </div>
         <div style={{ display: 'flex', gap: '8px' }}>
@@ -164,21 +173,21 @@ export default function AIChat() {
       {/* Messages */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '20px 16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
         {messages.length === 0 && (
-          <div style={{ textAlign: 'center', color: '#333', marginTop: '60px' }}>
+          <div style={{ textAlign: 'center', color: '#475569', marginTop: '60px' }}>
             <p style={{ fontSize: '48px' }}>🤖</p>
-            <p style={{ color: '#555', marginTop: '8px', fontSize: '16px' }}>Ask me anything!</p>
+            <p style={{ color: '#94a3b8', marginTop: '8px', fontSize: '16px' }}>Ask me anything!</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center', marginTop: '20px' }}>
               {['Explain quantum computing', 'Write a poem', 'Help me debug code', 'Plan my day'].map(s => (
                 <button
                   key={s}
                   onClick={() => { setInput(s); }}
                   style={{
-                    background: '#1e1e32', border: '1px solid #2a2a3e', color: '#888',
+                    background: '#1e1e32', border: '1px solid #2a2a3e', color: '#94a3b8',
                     borderRadius: '20px', padding: '8px 16px', cursor: 'pointer', fontSize: '13px',
                     transition: 'all 0.2s',
                   }}
-                  onMouseOver={e => { e.currentTarget.style.borderColor = '#667eea'; e.currentTarget.style.color = 'white'; }}
-                  onMouseOut={e => { e.currentTarget.style.borderColor = '#2a2a3e'; e.currentTarget.style.color = '#888'; }}
+                  onMouseOver={e => { e.currentTarget.style.borderColor = '#6366f1'; e.currentTarget.style.color = 'white'; }}
+                  onMouseOut={e => { e.currentTarget.style.borderColor = '#2a2a3e'; e.currentTarget.style.color = '#94a3b8'; }}
                 >
                   {s}
                 </button>
@@ -198,7 +207,7 @@ export default function AIChat() {
               padding: '12px 16px',
               borderRadius: msg.role === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
               background: msg.role === 'user'
-                ? 'linear-gradient(135deg, #667eea, #764ba2)'
+                ? 'linear-gradient(135deg, #6366f1, #8b5cf6)'
                 : '#1e1e32',
               color: 'white',
               fontSize: '14px',
@@ -218,7 +227,7 @@ export default function AIChat() {
             <div style={{ background: '#1e1e32', borderRadius: '18px 18px 18px 4px', padding: '14px 18px', display: 'flex', gap: '5px', border: '1px solid #2a2a3e' }}>
               {[0, 1, 2].map(i => (
                 <div key={i} style={{
-                  width: '7px', height: '7px', borderRadius: '50%', background: '#667eea',
+                  width: '7px', height: '7px', borderRadius: '50%', background: '#6366f1',
                   animation: `bounce 1s infinite ${i * 0.15}s`,
                 }} />
               ))}
@@ -230,7 +239,7 @@ export default function AIChat() {
       </div>
 
       {/* Input */}
-      <div style={{ padding: '12px 16px', borderTop: '1px solid #1e1e32', background: '#0d0d1a' }}>
+      <div className="msg-input-bar" style={{ borderTop: '1px solid #1e1e32', background: '#0d0d1a' }}>
         <div style={{ display: 'flex', gap: '8px' }}>
           <input
             value={input}
@@ -243,14 +252,14 @@ export default function AIChat() {
               borderRadius: '12px', padding: '11px 16px', fontSize: '14px', outline: 'none',
               transition: 'border-color 0.2s',
             }}
-            onFocus={e => e.target.style.borderColor = '#667eea'}
+            onFocus={e => e.target.style.borderColor = '#6366f1'}
             onBlur={e => e.target.style.borderColor = '#2a2a3e'}
           />
           <button
             onClick={send}
             disabled={loading || !input.trim()}
             style={{
-              background: !loading && input.trim() ? 'linear-gradient(135deg, #667eea, #764ba2)' : '#1e1e32',
+              background: !loading && input.trim() ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : '#1e1e32',
               border: 'none', borderRadius: '12px', padding: '11px 18px',
               color: 'white', cursor: !loading && input.trim() ? 'pointer' : 'default',
               fontSize: '16px', transition: 'all 0.2s',

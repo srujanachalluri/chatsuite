@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from './firebase';
+import useIsMobile from './hooks/useIsMobile';
 import Login from './components/Auth/Login';
 import Sidebar from './components/Sidebar/Sidebar';
 import ChatRoom from './components/Chat/ChatRoom';
@@ -14,6 +15,8 @@ export default function App() {
   const [activeRoom, setActiveRoom] = useState(null);
   const [activeDM, setActiveDM] = useState(null);
   const [showAI, setShowAI] = useState(false);
+  const [mobileChatOpen, setMobileChatOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (u) => {
@@ -35,7 +38,7 @@ export default function App() {
   if (loading) return (
     <div style={{
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      height: '100vh', background: '#0b0b14', flexDirection: 'column', gap: '18px',
+      height: '100dvh', background: '#0b0b14', flexDirection: 'column', gap: '18px',
     }}>
       <div style={{
         width: '48px', height: '48px',
@@ -54,22 +57,33 @@ export default function App() {
   if (!user) return <Login />;
 
   const activeId = showAI ? 'ai' : activeDM ? activeDM.uid : activeRoom?.id;
+  const hasActive = showAI || activeRoom || activeDM;
+  const openChat = () => setMobileChatOpen(true);
+  const onBack = isMobile ? () => setMobileChatOpen(false) : null;
+
+  // On mobile we show one pane at a time: the sidebar OR the active chat.
+  const showSidebar = !isMobile || !mobileChatOpen;
+  const showMain = !isMobile || mobileChatOpen;
 
   return (
-    <div style={{ display: 'flex', height: '100vh', background: '#0b0b14', overflow: 'hidden' }}>
-      <Sidebar
-        activeId={activeId}
-        onSelectRoom={(room) => { setActiveRoom(room); setActiveDM(null); setShowAI(false); }}
-        onSelectDM={(u) => { setActiveDM(u); setActiveRoom(null); setShowAI(false); }}
-        onSelectAI={() => { setShowAI(true); setActiveRoom(null); setActiveDM(null); }}
-      />
+    <div style={{ display: 'flex', height: '100dvh', background: '#0b0b14', overflow: 'hidden' }}>
+      {showSidebar && (
+        <Sidebar
+          isMobile={isMobile}
+          activeId={activeId}
+          onSelectRoom={(room) => { setActiveRoom(room); setActiveDM(null); setShowAI(false); openChat(); }}
+          onSelectDM={(u) => { setActiveDM(u); setActiveRoom(null); setShowAI(false); openChat(); }}
+          onSelectAI={() => { setShowAI(true); setActiveRoom(null); setActiveDM(null); openChat(); }}
+        />
+      )}
 
+      {showMain && (
       <div style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', background: '#0f0f1e' }}>
-        {showAI && <AIChat />}
-        {activeRoom && !showAI && <ChatRoom room={activeRoom} />}
-        {activeDM && !showAI && <DMChat otherUser={activeDM} />}
+        {showAI && <AIChat onBack={onBack} />}
+        {activeRoom && !showAI && <ChatRoom room={activeRoom} onBack={onBack} />}
+        {activeDM && !showAI && <DMChat otherUser={activeDM} onBack={onBack} />}
 
-        {!showAI && !activeRoom && !activeDM && (
+        {!hasActive && (
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             height: '100%', flexDirection: 'column', gap: '16px',
@@ -109,6 +123,7 @@ export default function App() {
           </div>
         )}
       </div>
+      )}
       <style>{`@keyframes fadeInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }`}</style>
     </div>
   );

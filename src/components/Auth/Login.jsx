@@ -7,14 +7,14 @@ export default function Login() {
   return (
     <div style={{
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      height: '100vh', background: '#0b0b14', overflow: 'hidden', position: 'relative',
+      height: '100dvh', background: '#0b0b14', overflow: 'hidden', position: 'relative', padding: '16px',
     }}>
       <div style={{ position: 'fixed', top: '-10%', left: '-10%', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(102,126,234,0.12) 0%, transparent 65%)', animation: 'pulse 4s ease-in-out infinite', pointerEvents: 'none' }} />
       <div style={{ position: 'fixed', bottom: '-15%', right: '-10%', width: '600px', height: '600px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(118,75,162,0.1) 0%, transparent 65%)', animation: 'pulse 5s ease-in-out infinite 1s', pointerEvents: 'none' }} />
       <div style={{ position: 'fixed', top: '40%', right: '15%', width: '300px', height: '300px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(79,209,197,0.06) 0%, transparent 65%)', animation: 'pulse 6s ease-in-out infinite 2s', pointerEvents: 'none' }} />
 
       <div className="fade-up" style={{
-        textAlign: 'center', padding: '56px 48px',
+        textAlign: 'center', padding: 'clamp(32px, 6vw, 56px) clamp(24px, 5vw, 48px)',
         background: 'rgba(255,255,255,0.03)',
         borderRadius: '32px',
         border: '1px solid rgba(255,255,255,0.08)',
@@ -33,11 +33,11 @@ export default function Login() {
         }}>💬</div>
 
         <h1 style={{
-          fontSize: '2.6rem', marginBottom: '10px', fontWeight: '800',
+          fontSize: 'clamp(2rem, 7vw, 2.6rem)', marginBottom: '10px', fontWeight: '800',
           background: 'linear-gradient(135deg, #ffffff 0%, #c7d2fe 60%, #a5b4fc 100%)',
           WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
           letterSpacing: '-0.8px', lineHeight: 1.1,
-        }}>ChatifySuite</h1>
+        }}>ChatSuite</h1>
 
         <p style={{ color: '#94a3b8', marginBottom: '8px', fontSize: '16px', fontWeight: '500', lineHeight: 1.5 }}>
           Chat with friends · Create rooms · Talk to AI

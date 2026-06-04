@@ -131,3 +131,30 @@ button {
 input {
   font-family: inherit;
 }
+
+/* Responsive spacing for chat panes */
+.chat-header {
+  padding: 18px 26px;
+}
+.msg-scroll {
+  padding: 24px 22px;
+}
+.msg-input-bar {
+  padding: 14px 18px;
+}
+
+@media (max-width: 768px) {
+  .chat-header {
+    padding: 14px 14px;
+  }
+  .msg-scroll {
+    padding: 16px 12px;
+  }
+  .msg-input-bar {
+    padding: 10px 12px;
+  }
+  /* Give bubbles more room on small screens */
+  .msg-bubble-wrap {
+    max-width: 78% !important;
+  }
+}

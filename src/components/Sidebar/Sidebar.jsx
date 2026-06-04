@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { collection, addDoc, onSnapshot, serverTimestamp } from 'firebase/firestore';
 import { db, auth } from '../../firebase';
 import { signOut } from 'firebase/auth';
+import toast from 'react-hot-toast';
 
-export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId }) {
+export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId, isMobile }) {
   const [rooms, setRooms] = useState([]);
   const [users, setUsers] = useState([]);
   const [newRoom, setNewRoom] = useState('');
@@ -27,9 +28,14 @@ export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId
     if (!newRoom.trim()) return;
     const name = newRoom.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     if (!name) return;
-    await addDoc(collection(db, 'rooms'), { name, createdBy: auth.currentUser.uid, createdAt: serverTimestamp() });
-    setNewRoom('');
-    setShowRoomInput(false);
+    try {
+      await addDoc(collection(db, 'rooms'), { name, createdBy: auth.currentUser.uid, createdAt: serverTimestamp() });
+      toast.success(`#${name} created`);
+      setNewRoom('');
+      setShowRoomInput(false);
+    } catch (err) {
+      toast.error('Could not create channel');
+    }
   };
 
   const NavItem = ({ active, onClick, children }) => (
@@ -50,7 +56,7 @@ export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId
 
   return (
     <div style={{
-      width: '265px', flexShrink: 0, height: '100%',
+      width: isMobile ? '100%' : '265px', flexShrink: 0, height: '100%',
       background: 'linear-gradient(180deg, #0d0d1a 0%, #0b0b16 100%)',
       borderRight: '1px solid rgba(255,255,255,0.06)',
       display: 'flex', flexDirection: 'column',
@@ -192,7 +198,7 @@ export default function Sidebar({ onSelectRoom, onSelectDM, onSelectAI, activeId
                   <p style={{ color: '#475569', margin: '2px 0 0', fontSize: '11px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{auth.currentUser?.email}</p>
                 </div>
               </div>
-              <button onClick={() => signOut(auth)} style={{
+              <button onClick={() => { signOut(auth); toast.success('Signed out'); }} style={{
                 width: '100%', padding: '14px 18px', background: 'none', border: 'none',
                 color: '#f87171', cursor: 'pointer', fontSize: '14px', fontWeight: '700',
                 textAlign: 'left', display: 'flex', alignItems: 'center', gap: '12px', transition: 'background 0.2s',

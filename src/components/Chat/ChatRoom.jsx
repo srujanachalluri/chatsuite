@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { collection, query, orderBy, limit, onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase';
-import Message from './Message';
+import MessageList from './MessageList';
 import MessageInput from './MessageInput';
+import BackButton from './BackButton';
 
-export default function ChatRoom({ room }) {
+export default function ChatRoom({ room, onBack }) {
   const [messages, setMessages] = useState([]);
   const [loaded, setLoaded] = useState(false);
-  const bottomRef = useRef();
 
   useEffect(() => {
     setLoaded(false); setMessages([]);
@@ -16,11 +16,18 @@ export default function ChatRoom({ room }) {
     return unsub;
   }, [room.id]);
 
-  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
+  const emptyState = loaded && messages.length === 0 && (
+    <div style={{ textAlign: 'center', marginTop: '100px' }}>
+      <div style={{ fontSize: '52px', marginBottom: '16px' }}>👋</div>
+      <p style={{ color: '#64748b', fontWeight: '700', fontSize: '17px', marginBottom: '6px' }}>Welcome to #{room.name}</p>
+      <p style={{ color: '#334155', fontSize: '14px' }}>Be the first to send a message!</p>
+    </div>
+  );
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div style={{ padding: '18px 26px', borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(11,11,20,0.9)', backdropFilter: 'blur(24px)', display: 'flex', alignItems: 'center', gap: '14px', flexShrink: 0 }}>
+      <div className="chat-header" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(11,11,20,0.9)', backdropFilter: 'blur(24px)', display: 'flex', alignItems: 'center', gap: '14px', flexShrink: 0 }}>
+        {onBack && <BackButton onClick={onBack} />}
         <div style={{ width: '42px', height: '42px', borderRadius: '13px', background: 'linear-gradient(135deg, rgba(99,102,241,0.25), rgba(139,92,246,0.25))', border: '1px solid rgba(99,102,241,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: '800', color: '#818cf8', flexShrink: 0 }}>#</div>
         <div>
           <h2 style={{ color: '#f1f5f9', margin: 0, fontSize: '17px', fontWeight: '700', letterSpacing: '-0.4px' }}>{room.name}</h2>
@@ -32,17 +39,7 @@ export default function ChatRoom({ room }) {
         </div>
       </div>
 
-      <div style={{ flex: 1, overflowY: 'auto', padding: '24px 22px' }}>
-        {loaded && messages.length === 0 && (
-          <div style={{ textAlign: 'center', marginTop: '100px' }}>
-            <div style={{ fontSize: '52px', marginBottom: '16px' }}>👋</div>
-            <p style={{ color: '#64748b', fontWeight: '700', fontSize: '17px', marginBottom: '6px' }}>Welcome to #{room.name}</p>
-            <p style={{ color: '#334155', fontSize: '14px' }}>Be the first to send a message!</p>
-          </div>
-        )}
-        {messages.map(msg => <Message key={msg.id} msg={msg} collectionPath={`rooms/${room.id}/messages`} />)}
-        <div ref={bottomRef} />
-      </div>
+      <MessageList messages={messages} loaded={loaded} emptyState={emptyState} collectionPath={`rooms/${room.id}/messages`} />
 
       <MessageInput collectionPath={`rooms/${room.id}/messages`} />
       <style>{`@keyframes livePulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }`}</style>
