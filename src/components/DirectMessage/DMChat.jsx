@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { collection, query, orderBy, limit, onSnapshot } from 'firebase/firestore';
 import { db, auth } from '../../firebase';
-import Message from '../Chat/Message';
+import MessageList from '../Chat/MessageList';
 import MessageInput from '../Chat/MessageInput';
+import BackButton from '../Chat/BackButton';
 
-export default function DMChat({ otherUser }) {
+export default function DMChat({ otherUser, onBack }) {
   const [messages, setMessages] = useState([]);
   const [loaded, setLoaded] = useState(false);
-  const bottomRef = useRef();
   const dmId = [auth.currentUser.uid, otherUser.uid].sort().join('_');
 
   useEffect(() => {
@@ -17,11 +17,18 @@ export default function DMChat({ otherUser }) {
     return unsub;
   }, [dmId]);
 
-  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
+  const emptyState = loaded && messages.length === 0 && (
+    <div style={{ textAlign: 'center', marginTop: '100px' }}>
+      <img src={otherUser.photoURL} style={{ width: '72px', height: '72px', borderRadius: '50%', border: '3px solid rgba(99,102,241,0.5)', margin: '0 auto 16px', display: 'block', boxShadow: '0 8px 32px rgba(99,102,241,0.3)' }} alt="" />
+      <p style={{ color: '#94a3b8', fontWeight: '700', fontSize: '17px', marginBottom: '6px' }}>{otherUser.displayName}</p>
+      <p style={{ color: '#334155', fontSize: '14px' }}>Start your private conversation</p>
+    </div>
+  );
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <div style={{ padding: '18px 26px', borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(11,11,20,0.9)', backdropFilter: 'blur(24px)', display: 'flex', alignItems: 'center', gap: '14px', flexShrink: 0 }}>
+      <div className="chat-header" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', background: 'rgba(11,11,20,0.9)', backdropFilter: 'blur(24px)', display: 'flex', alignItems: 'center', gap: '14px', flexShrink: 0 }}>
+        {onBack && <BackButton onClick={onBack} />}
         <div style={{ position: 'relative' }}>
           <img src={otherUser.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${otherUser.uid}`}
             style={{ width: '42px', height: '42px', borderRadius: '50%', border: '2px solid rgba(99,102,241,0.5)', display: 'block', boxShadow: '0 4px 16px rgba(99,102,241,0.3)' }} alt="" />
@@ -33,17 +40,7 @@ export default function DMChat({ otherUser }) {
         </div>
       </div>
 
-      <div style={{ flex: 1, overflowY: 'auto', padding: '24px 22px' }}>
-        {loaded && messages.length === 0 && (
-          <div style={{ textAlign: 'center', marginTop: '100px' }}>
-            <img src={otherUser.photoURL} style={{ width: '72px', height: '72px', borderRadius: '50%', border: '3px solid rgba(99,102,241,0.5)', margin: '0 auto 16px', display: 'block', boxShadow: '0 8px 32px rgba(99,102,241,0.3)' }} alt="" />
-            <p style={{ color: '#94a3b8', fontWeight: '700', fontSize: '17px', marginBottom: '6px' }}>{otherUser.displayName}</p>
-            <p style={{ color: '#334155', fontSize: '14px' }}>Start your private conversation</p>
-          </div>
-        )}
-        {messages.map(msg => <Message key={msg.id} msg={msg} collectionPath={`dms/${dmId}/messages`} />)}
-        <div ref={bottomRef} />
-      </div>
+      <MessageList messages={messages} loaded={loaded} emptyState={emptyState} collectionPath={`dms/${dmId}/messages`} />
 
       <MessageInput collectionPath={`dms/${dmId}/messages`} placeholder={`Message ${otherUser.displayName}...`} />
       <style>{`@keyframes livePulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }`}</style>

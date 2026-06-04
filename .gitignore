@@ -8,4 +8,7 @@ dist/
 .DS_Store
 Thumbs.db
 *.log
-ChatSuite_Documentation.docx
+*.docx
+chatsuite_modern_diagram.html
+chatsuite_diagram_hd.png
+chat.png
