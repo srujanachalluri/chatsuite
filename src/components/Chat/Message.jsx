@@ -3,12 +3,14 @@ import { doc, updateDoc, deleteDoc, arrayUnion, arrayRemove, serverTimestamp } f
 import { db, auth } from '../../firebase';
 import toast from 'react-hot-toast';
 import useIsMobile from '../../hooks/useIsMobile';
+import { useLang } from '../../i18n/LanguageContext';
 import { formatText } from '../../utils/formatText';
 import MessageMenu from './MessageMenu';
 
 const MAX_LEN = 4000;
 
 export default function Message({ msg, collectionPath }) {
+  const { t } = useLang();
   const [menuOpen, setMenuOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -37,9 +39,9 @@ export default function Message({ msg, collectionPath }) {
     setMenuOpen(false);
     try {
       await navigator.clipboard.writeText(msg.text);
-      toast.success('Copied');
+      toast.success(t('toast.copied'));
     } catch {
-      toast.error('Could not copy');
+      toast.error(t('toast.copyFailed'));
     }
   };
 
@@ -51,9 +53,9 @@ export default function Message({ msg, collectionPath }) {
     if (next === msg.text) { setEditing(false); return; }
     try {
       await updateDoc(msgRef(), { text: next.slice(0, MAX_LEN), editedAt: serverTimestamp() });
-      toast.success('Message updated');
+      toast.success(t('toast.msgUpdated'));
     } catch {
-      toast.error('Could not update message');
+      toast.error(t('toast.msgUpdateFailed'));
     }
     setEditing(false);
   };
@@ -62,9 +64,9 @@ export default function Message({ msg, collectionPath }) {
     setMenuOpen(false);
     try {
       await deleteDoc(msgRef());
-      toast.success('Message deleted');
+      toast.success(t('toast.msgDeleted'));
     } catch {
-      toast.error('Could not delete message');
+      toast.error(t('toast.msgDeleteFailed'));
     }
   };
 
@@ -124,11 +126,11 @@ export default function Message({ msg, collectionPath }) {
                 <button onClick={() => { setEditText(msg.text); setEditing(false); }} style={{
                   background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
                   color: '#94a3b8', borderRadius: '10px', padding: '6px 14px', fontSize: '13px', fontWeight: '600', cursor: 'pointer',
-                }}>Cancel</button>
+                }}>{t('edit.cancel')}</button>
                 <button onClick={saveEdit} style={{
                   background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', border: 'none',
                   color: 'white', borderRadius: '10px', padding: '6px 16px', fontSize: '13px', fontWeight: '700', cursor: 'pointer',
-                }}>Save</button>
+                }}>{t('edit.save')}</button>
               </div>
             </div>
           ) : (
@@ -196,7 +198,7 @@ export default function Message({ msg, collectionPath }) {
         )}
 
         <p style={{ fontSize: '11px', color: '#475569', marginTop: '5px', textAlign: isOwn ? 'right' : 'left', paddingLeft: '4px', paddingRight: '4px', fontWeight: '500' }}>
-          {time}{msg.editedAt && <span style={{ fontStyle: 'italic', opacity: 0.8 }}> · edited</span>}
+          {time}{msg.editedAt && <span style={{ fontStyle: 'italic', opacity: 0.8 }}> · {t('msg.edited')}</span>}
         </p>
       </div>
 

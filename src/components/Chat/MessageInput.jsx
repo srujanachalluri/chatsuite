@@ -4,21 +4,33 @@ import { db, auth } from '../../firebase';
 import EmojiPicker from 'emoji-picker-react';
 import toast from 'react-hot-toast';
 import useIsMobile from '../../hooks/useIsMobile';
+import { useLang } from '../../i18n/LanguageContext';
+import { requestNotificationPermission } from '../../utils/notify';
 
 const MAX_LEN = 4000;
+let notifPromptDone = false;
 
-export default function MessageInput({ collectionPath, placeholder = 'Write a message...' }) {
+export default function MessageInput({ collectionPath, placeholder }) {
   const [text, setText] = useState('');
   const [showEmoji, setShowEmoji] = useState(false);
   const [focused, setFocused] = useState(false);
   const inputRef = useRef();
   const isMobile = useIsMobile();
+  const { t } = useLang();
+  const ph = placeholder ?? t('input.placeholder');
 
   const getCol = () => collection(db, ...collectionPath.split('/'));
 
   const send = async () => {
     if (!text.trim()) return;
-    if (text.length > MAX_LEN) { toast.error(`Message too long (max ${MAX_LEN} characters)`); return; }
+    if (text.length > MAX_LEN) { toast.error(t('input.tooLong', { n: MAX_LEN })); return; }
+    // Ask for notification permission once, off this user gesture.
+    if (!notifPromptDone) {
+      notifPromptDone = true;
+      requestNotificationPermission().then((p) => {
+        if (p === 'granted') toast.success(t('toast.notificationsOn'));
+      });
+    }
     const msg = text.trim();
     setText('');
     try {
@@ -30,7 +42,7 @@ export default function MessageInput({ collectionPath, placeholder = 'Write a me
       });
     } catch {
       setText(msg);
-      toast.error('Message failed to send');
+      toast.error(t('toast.sendFailed'));
     }
   };
 
@@ -68,7 +80,7 @@ export default function MessageInput({ collectionPath, placeholder = 'Write a me
           maxLength={MAX_LEN}
           onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
           onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
-          placeholder={placeholder}
+          placeholder={ph}
           style={{ flex: 1, background: 'none', color: '#f1f5f9', border: 'none', fontSize: '15px', fontWeight: '450', outline: 'none', letterSpacing: '0.1px', minWidth: 0 }}
         />
 
@@ -88,7 +100,7 @@ export default function MessageInput({ collectionPath, placeholder = 'Write a me
 
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginTop: '6px' }}>
         <p style={{ textAlign: 'center', fontSize: '11px', color: '#1e293b', fontWeight: '500', margin: 0 }}>
-          Enter to send · Shift+Enter newline · **bold** *italic* ~~strike~~ `code`
+          {t('input.hint')}
         </p>
         {text.length > MAX_LEN * 0.85 && (
           <span style={{ fontSize: '11px', fontWeight: '700', color: text.length >= MAX_LEN ? '#f87171' : '#64748b' }}>

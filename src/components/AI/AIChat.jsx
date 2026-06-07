@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import BackButton from '../Chat/BackButton';
+import { useLang } from '../../i18n/LanguageContext';
 
 export default function AIChat({ onBack }) {
+  const { t } = useLang();
   const [messages, setMessages] = useState(() => {
     try { return JSON.parse(localStorage.getItem('ai_chat')) || []; } catch { return []; }
   });
@@ -33,7 +35,7 @@ export default function AIChat({ onBack }) {
       localStorage.setItem('gemini_key', apiKey.trim());
       setKeySet(true);
     } catch (err) {
-      setKeyError('Invalid key or quota exceeded. Try a new key from aistudio.google.com');
+      setKeyError(t('ai.invalidKey'));
     }
   };
 
@@ -89,16 +91,16 @@ export default function AIChat({ onBack }) {
         padding: '24px',
       }}>
         <div style={{ fontSize: '56px' }}>🤖</div>
-        <h2 style={{ fontSize: '1.6rem', fontWeight: '700' }}>AI Assistant</h2>
-        <p style={{ color: '#666', textAlign: 'center', maxWidth: '320px', lineHeight: 1.6 }}>
-          Enter your free Gemini API key to start chatting with AI.{' '}
+        <h2 style={{ fontSize: '1.6rem', fontWeight: '700' }}>{t('ai.title')}</h2>
+        <p style={{ color: '#94a3b8', textAlign: 'center', maxWidth: '320px', lineHeight: 1.6 }}>
+          {t('ai.enterKey')}{' '}
           <a
             href="https://aistudio.google.com/app/apikey"
             target="_blank"
             rel="noreferrer"
             style={{ color: '#6366f1', textDecoration: 'none' }}
           >
-            Get one free here →
+            {t('ai.getKey')}
           </a>
         </p>
 
@@ -133,7 +135,7 @@ export default function AIChat({ onBack }) {
             fontWeight: '600', fontSize: '15px', transition: 'all 0.2s',
           }}
         >
-          Start Chatting with AI →
+          {t('ai.start')}
         </button>
       </div>
     );
@@ -150,22 +152,22 @@ export default function AIChat({ onBack }) {
           {onBack && <BackButton onClick={onBack} />}
           <span style={{ fontSize: '28px' }}>🤖</span>
           <div>
-            <h2 style={{ color: 'white', margin: 0, fontSize: '16px', fontWeight: '700' }}>AI Assistant</h2>
-            <p style={{ color: '#4ade80', margin: 0, fontSize: '11px' }}>● Powered by Gemini</p>
+            <h2 style={{ color: 'white', margin: 0, fontSize: '16px', fontWeight: '700' }}>{t('ai.title')}</h2>
+            <p style={{ color: '#4ade80', margin: 0, fontSize: '11px' }}>{t('ai.poweredBy')}</p>
           </div>
         </div>
         <div style={{ display: 'flex', gap: '8px' }}>
           <button
             onClick={clearChat}
-            style={{ background: 'none', border: '1px solid #2a2a3e', color: '#666', borderRadius: '8px', padding: '6px 12px', cursor: 'pointer', fontSize: '12px' }}
+            style={{ background: 'none', border: '1px solid #2a2a3e', color: '#94a3b8', borderRadius: '8px', padding: '6px 12px', cursor: 'pointer', fontSize: '12px' }}
           >
-            Clear
+            {t('ai.clear')}
           </button>
           <button
             onClick={() => { setKeySet(false); localStorage.removeItem('gemini_key'); }}
-            style={{ background: 'none', border: '1px solid #2a2a3e', color: '#666', borderRadius: '8px', padding: '6px 12px', cursor: 'pointer', fontSize: '12px' }}
+            style={{ background: 'none', border: '1px solid #2a2a3e', color: '#94a3b8', borderRadius: '8px', padding: '6px 12px', cursor: 'pointer', fontSize: '12px' }}
           >
-            Change Key
+            {t('ai.changeKey')}
           </button>
         </div>
       </div>
@@ -175,7 +177,7 @@ export default function AIChat({ onBack }) {
         {messages.length === 0 && (
           <div style={{ textAlign: 'center', color: '#475569', marginTop: '60px' }}>
             <p style={{ fontSize: '48px' }}>🤖</p>
-            <p style={{ color: '#94a3b8', marginTop: '8px', fontSize: '16px' }}>Ask me anything!</p>
+            <p style={{ color: '#94a3b8', marginTop: '8px', fontSize: '16px' }}>{t('ai.askAnything')}</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center', marginTop: '20px' }}>
               {['Explain quantum computing', 'Write a poem', 'Help me debug code', 'Plan my day'].map(s => (
                 <button
@@ -245,7 +247,7 @@ export default function AIChat({ onBack }) {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
-            placeholder="Ask AI anything..."
+            placeholder={t('ai.placeholder')}
             disabled={loading}
             style={{
               flex: 1, background: '#1e1e32', color: 'white', border: '1px solid #2a2a3e',

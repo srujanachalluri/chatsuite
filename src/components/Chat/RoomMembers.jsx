@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db, auth } from '../../firebase';
 import useIsMobile from '../../hooks/useIsMobile';
+import { useLang } from '../../i18n/LanguageContext';
 
 const ONLINE_WINDOW_MS = 2 * 60 * 1000; // "online" if seen within 2 minutes
 
@@ -14,6 +15,7 @@ function isOnline(user) {
 export default function RoomMembers({ roomName, onClose }) {
   const [users, setUsers] = useState([]);
   const isMobile = useIsMobile();
+  const { t } = useLang();
 
   useEffect(() => {
     return onSnapshot(collection(db, 'users'), snap => {
@@ -46,9 +48,9 @@ export default function RoomMembers({ roomName, onClose }) {
             color: '#c7d2fe', cursor: 'pointer', fontSize: '18px', lineHeight: 1,
           }}>✕</button>
           <div>
-            <h3 style={{ color: '#f1f5f9', margin: 0, fontSize: '16px', fontWeight: '800' }}>Members</h3>
+            <h3 style={{ color: '#f1f5f9', margin: 0, fontSize: '16px', fontWeight: '800' }}>{t('members.title')}</h3>
             <p style={{ color: '#475569', margin: '2px 0 0', fontSize: '12px', fontWeight: '500' }}>
-              #{roomName} · {users.length} total · {onlineCount} online
+              #{roomName} · {users.length} {t('members.total')} · {onlineCount} {t('members.online')}
             </p>
           </div>
         </div>
@@ -69,10 +71,10 @@ export default function RoomMembers({ roomName, onClose }) {
                 </div>
                 <div style={{ overflow: 'hidden' }}>
                   <p style={{ color: '#e2e8f0', margin: 0, fontSize: '14px', fontWeight: '700', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {user.displayName}{user.uid === myUid && <span style={{ color: '#818cf8', fontWeight: '600' }}> (you)</span>}
+                    {user.displayName}{user.uid === myUid && <span style={{ color: '#818cf8', fontWeight: '600' }}> {t('members.you')}</span>}
                   </p>
                   <p style={{ color: online ? '#4ade80' : '#475569', margin: 0, fontSize: '11px', fontWeight: '600' }}>
-                    {online ? '● Online' : 'Offline'}
+                    {online ? t('members.onlineStatus') : t('members.offlineStatus')}
                   </p>
                 </div>
               </div>
