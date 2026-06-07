@@ -1,11 +1,28 @@
 import { signInWithPopup } from 'firebase/auth';
-import { auth, provider } from '../../firebase';
+import toast from 'react-hot-toast';
+import { auth, provider, facebookProvider } from '../../firebase';
 import { useLang } from '../../i18n/LanguageContext';
 import LanguageToggle from '../LanguageToggle';
 
 export default function Login() {
   const { t } = useLang();
-  const signIn = () => signInWithPopup(auth, provider);
+
+  const signInWith = async (authProvider) => {
+    try {
+      await signInWithPopup(auth, authProvider);
+    } catch (err) {
+      if (err?.code === 'auth/account-exists-with-different-credential') {
+        toast.error(t('login.accountExists'));
+      } else if (err?.code === 'auth/popup-closed-by-user' || err?.code === 'auth/cancelled-popup-request') {
+        // user dismissed — no toast
+      } else {
+        toast.error(t('login.signInFailed'));
+      }
+    }
+  };
+
+  const signIn = () => signInWith(provider);
+  const signInFacebook = () => signInWith(facebookProvider);
 
   return (
     <div style={{
@@ -81,6 +98,26 @@ export default function Login() {
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
           </svg>
           {t('login.continueGoogle')}
+        </button>
+
+        <button
+          onClick={signInFacebook}
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px',
+            background: '#1877F2', color: 'white',
+            border: 'none', padding: '14px 32px', marginTop: '14px',
+            borderRadius: '16px', fontSize: '15px', fontWeight: '700',
+            cursor: 'pointer', margin: '14px auto 0',
+            boxShadow: '0 4px 24px rgba(24,119,242,0.35)',
+            transition: 'all 0.25s cubic-bezier(0.34,1.56,0.64,1)',
+          }}
+          onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)'; }}
+          onMouseOut={e => { e.currentTarget.style.transform = 'translateY(0) scale(1)'; }}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+            <path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07c0 6.03 4.39 11.03 10.12 11.93v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z"/>
+          </svg>
+          {t('login.continueFacebook')}
         </button>
 
         <p style={{ color: '#334155', fontSize: '12px', marginTop: '24px' }}>

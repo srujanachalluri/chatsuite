@@ -4,6 +4,7 @@ import { doc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from './firebase';
 import useIsMobile from './hooks/useIsMobile';
 import { useLang } from './i18n/LanguageContext';
+import InviteShare from './components/Share/InviteShare';
 import Login from './components/Auth/Login';
 import Sidebar from './components/Sidebar/Sidebar';
 import ChatRoom from './components/Chat/ChatRoom';
@@ -17,6 +18,7 @@ export default function App() {
   const [activeDM, setActiveDM] = useState(null);
   const [showAI, setShowAI] = useState(false);
   const [mobileChatOpen, setMobileChatOpen] = useState(false);
+  const [showInvite, setShowInvite] = useState(false);
   const isMobile = useIsMobile();
   const { t } = useLang();
 
@@ -135,10 +137,23 @@ export default function App() {
                 </div>
               ))}
             </div>
+
+            <button onClick={() => setShowInvite(true)} style={{
+              marginTop: '24px', display: 'flex', alignItems: 'center', gap: '10px',
+              background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', border: 'none',
+              color: 'white', borderRadius: '14px', padding: '13px 24px', fontSize: '15px', fontWeight: '700',
+              cursor: 'pointer', boxShadow: '0 8px 28px rgba(99,102,241,0.4)', transition: 'transform 0.2s',
+            }}
+              onMouseOver={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+              onMouseOut={e => e.currentTarget.style.transform = 'translateY(0)'}
+            >
+              <span style={{ fontSize: '18px' }}>🎉</span>{t('invite.button')}
+            </button>
           </div>
         )}
       </div>
       )}
+      {showInvite && <InviteShare onClose={() => setShowInvite(false)} />}
       <style>{`@keyframes fadeInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }`}</style>
     </div>
   );
