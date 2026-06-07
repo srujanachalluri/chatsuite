@@ -4,10 +4,12 @@ import { db } from '../../firebase';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import BackButton from './BackButton';
+import RoomMembers from './RoomMembers';
 
 export default function ChatRoom({ room, onBack }) {
   const [messages, setMessages] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [showMembers, setShowMembers] = useState(false);
 
   useEffect(() => {
     setLoaded(false); setMessages([]);
@@ -33,15 +35,30 @@ export default function ChatRoom({ room, onBack }) {
           <h2 style={{ color: '#f1f5f9', margin: 0, fontSize: '17px', fontWeight: '700', letterSpacing: '-0.4px' }}>{room.name}</h2>
           <p style={{ color: '#475569', margin: 0, fontSize: '12px', fontWeight: '500', marginTop: '1px' }}>Group channel · {messages.length} messages</p>
         </div>
-        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#4ade80', display: 'inline-block', boxShadow: '0 0 8px #4ade80', animation: 'livePulse 2s infinite' }} />
-          <span style={{ color: '#4ade80', fontSize: '12px', fontWeight: '600' }}>Live</span>
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#4ade80', display: 'inline-block', boxShadow: '0 0 8px #4ade80', animation: 'livePulse 2s infinite' }} />
+            <span style={{ color: '#4ade80', fontSize: '12px', fontWeight: '600' }}>Live</span>
+          </span>
+          <button onClick={() => setShowMembers(true)} title="Members" style={{
+            display: 'flex', alignItems: 'center', gap: '6px',
+            background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: '11px', padding: '7px 12px', color: '#c7d2fe', cursor: 'pointer',
+            fontSize: '14px', fontWeight: '600', transition: 'background 0.2s',
+          }}
+            onMouseOver={e => e.currentTarget.style.background = 'rgba(99,102,241,0.18)'}
+            onMouseOut={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+          >
+            <span style={{ fontSize: '16px' }}>👥</span>
+            <span>Members</span>
+          </button>
         </div>
       </div>
 
       <MessageList messages={messages} loaded={loaded} emptyState={emptyState} collectionPath={`rooms/${room.id}/messages`} />
 
       <MessageInput collectionPath={`rooms/${room.id}/messages`} />
+      {showMembers && <RoomMembers roomName={room.name} onClose={() => setShowMembers(false)} />}
       <style>{`@keyframes livePulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }`}</style>
     </div>
   );
